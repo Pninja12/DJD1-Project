@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 1573365232477528924}
   - component: {fileID: 3390133641219005546}
   - component: {fileID: -7870607296279567999}
-  m_Layer: 0
+  - component: {fileID: 7997377155806546053}
+  m_Layer: 7
   m_Name: guard_sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,7 +32,8 @@ Transform:
   m_LocalPosition: {x: 412.6, y: -31.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8706566625658680792}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1573365232477528924
@@ -112,7 +114,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!70 &-7870607296279567999
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -148,3 +150,53 @@ CapsuleCollider2D:
   m_Offset: {x: -3.1006317, y: 0}
   m_Size: {x: 24.158722, y: 32}
   m_Direction: 0
+--- !u!114 &7997377155806546053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8094927373954432037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8836e6c31882542a3d512e50da1ed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 8265163865314974718, guid: 7b38565a4be99494295af9a9b9b459a4, type: 3}
+  gunner: 0
+  melee: 1
+  maxSpeed: 100
+  jumpSpeed: 200
+  wallCheck: {fileID: 8706566625658680792}
+  wallCheckRadius: 2
+--- !u!1 &8699006089434108442
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8706566625658680792}
+  m_Layer: 7
+  m_Name: WallCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8706566625658680792
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8699006089434108442}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3264630069278589457}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

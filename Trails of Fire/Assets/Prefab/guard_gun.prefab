@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 7917492663334651531}
   - component: {fileID: 4476732288402570866}
   - component: {fileID: -3000141323785745161}
-  m_Layer: 0
+  - component: {fileID: 7852705232279611750}
+  m_Layer: 7
   m_Name: guard_gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,7 +113,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!70 &-3000141323785745161
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -148,3 +149,22 @@ CapsuleCollider2D:
   m_Offset: {x: -0.033843994, y: 0}
   m_Size: {x: 14.463562, y: 32}
   m_Direction: 0
+--- !u!114 &7852705232279611750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243101316555023595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8836e6c31882542a3d512e50da1ed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 8265163865314974718, guid: 7b38565a4be99494295af9a9b9b459a4, type: 3}
+  gunner: 1
+  melee: 0
+  maxSpeed: 100
+  jumpSpeed: 200
+  wallCheck: {fileID: 0}
+  wallCheckRadius: 2

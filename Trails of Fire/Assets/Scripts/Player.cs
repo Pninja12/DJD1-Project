@@ -131,6 +131,12 @@ public class Player : MonoBehaviour
 
         return true;
     }
+    
+    public Vector2 GiveX()
+    {
+        Vector2 vector = rb.position;
+        return vector;
+    }
 
     private void OnDrawGizmosSelected()
     {
