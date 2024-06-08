@@ -53,6 +53,7 @@ public class Player : MonoBehaviour
     private bool canDash = true;
     private bool isDashing;
     private bool isInvincible = false;
+    private int score = 0;
     
 
     // Start is called before the first frame update
