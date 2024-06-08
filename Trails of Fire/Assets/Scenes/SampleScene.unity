@@ -145,7 +145,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3960833728119313289, guid: 7b38565a4be99494295af9a9b9b459a4, type: 3}
       propertyPath: maxHealth
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3960833728119313289, guid: 7b38565a4be99494295af9a9b9b459a4, type: 3}
       propertyPath: enemyLayer.m_Bits
@@ -4075,6 +4075,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96a0e199fd1fa83478a26afc228eefb5, type: 3}
+--- !u!1001 &2829245172633708676
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 992230199587963688, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 118.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 992230199587963688, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -45.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 992230199587963688, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.9315422
+      objectReference: {fileID: 0}
+    - target: {fileID: 992230199587963688, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 992230199587963688, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 992230199587963688, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 992230199587963688, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 992230199587963688, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 992230199587963688, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 992230199587963688, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1589658428907793861, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
+      propertyPath: m_Name
+      value: ArmorUp
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f95b53e6c0d31bf4e8fdb38750af2103, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -4084,3 +4141,4 @@ SceneRoots:
   - {fileID: 817071565}
   - {fileID: 1558885282}
   - {fileID: 415288877}
+  - {fileID: 2829245172633708676}
