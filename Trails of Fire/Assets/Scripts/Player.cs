@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] 
+    private Faction faction;
     [SerializeField]
     private float maxSpeed = 100;
     [SerializeField]
@@ -31,8 +34,17 @@ public class Player : MonoBehaviour
     [SerializeField]
     private TrailRenderer tr;
 
+    [SerializeField]
+    private Transform sizeA;
+    [SerializeField]
+    private Transform sizeB;
+    [SerializeField]
+    private LayerMask enemyLayer;
+    [SerializeField]
+    private float invincibilityDurationSeconds;
 
-    private int health;
+
+    public int health;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private Animator animator;
@@ -40,9 +52,11 @@ public class Player : MonoBehaviour
     private float jumpTime;
     private bool canDash = true;
     private bool isDashing;
+    private bool isInvincible = false;
     
 
     // Start is called before the first frame update
+
     void Start()
     {
         health = maxHealth;
@@ -118,6 +132,21 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(Dash());
         }
+        TouchEnemy();
+    }
+    private void TouchEnemy()
+    {
+        if (isInvincible)
+            return;
+        Collider2D collider = Physics2D.OverlapArea(sizeA.position, sizeB.position, enemyLayer);
+        if ((collider != null) && (health == 1))
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        else if ((collider != null) && (health > 1))
+        {
+            health -= 1;
+            StartCoroutine(BecomeTemporarilyInvincible());
+        }
+            
     }
 
     private bool IsGrounded()
@@ -132,6 +161,15 @@ public class Player : MonoBehaviour
         return true;
     }
     
+    private IEnumerator BecomeTemporarilyInvincible()
+    {
+        isInvincible = true;
+
+        yield return new WaitForSeconds(invincibilityDurationSeconds);
+
+        isInvincible = false;
+    }
+
     public Vector2 GiveX()
     {
         Vector2 vector = rb.position;
