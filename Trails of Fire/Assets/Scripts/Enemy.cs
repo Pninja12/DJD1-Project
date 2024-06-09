@@ -17,6 +17,8 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private bool melee = false;
     [SerializeField]
+    private bool car = false;
+    [SerializeField]
     private float maxSpeed = 100;
     [SerializeField]
     private Transform playerCheck;
@@ -24,6 +26,10 @@ public class Enemy : MonoBehaviour
     private float playerCheckRadius;
     [SerializeField]
     private LayerMask playerLayer;
+    [SerializeField]
+    private LayerMask ultiLayer;
+    [SerializeField]
+    private LayerMask shotLayer;
     [SerializeField, ShowIf(nameof(melee))]
     private Transform wallCheck;
     [SerializeField, ShowIf(nameof(melee))]
@@ -39,7 +45,13 @@ public class Enemy : MonoBehaviour
     [SerializeField, ShowIf(nameof(melee))]
     private float maxJumpTime = 0.1f;
     [SerializeField, ShowIf(nameof(gunner))]
-    private float attackCooldown = 1;
+    private float attackCooldown = 4;
+    [SerializeField, ShowIf(nameof(gunner))]
+    private GameObject bullet;
+    [SerializeField, ShowIf(nameof(gunner))]
+    private Transform shootPlace;
+    [SerializeField, ShowIf(nameof(car))]
+    private float timeToMove = 0;
 
     // Start is called before the first frame update
 
@@ -48,6 +60,11 @@ public class Enemy : MonoBehaviour
     private bool isPlayerInside;
     private float jumpTime;
     private float defaultGravity;
+    private bool isInvincible;
+    private bool hit = false;
+    private float cooldownTimer = Mathf.Infinity;
+    private float cooldown = Mathf.Infinity;
+    private bool rotate = false;
     void Start()
     {
         thisRB = GetComponent<Rigidbody2D>();
@@ -63,7 +80,14 @@ public class Enemy : MonoBehaviour
         }
         Action();
 
-        TouchPlayer();
+        if(!car)
+            TouchPlayer();
+        TouchUlti();
+
+        if(hit)
+            Destroy(gameObject,0.05f);
+
+
         
     }
 
@@ -75,7 +99,7 @@ public class Enemy : MonoBehaviour
         {
             if(isPlayerInside)
             {
-                Vector2 playerposition = player.GiveX();
+                Vector2 playerposition = player.GivePosition();
                 if (playerposition.x > transform.position.x)
                 {
                     transform.rotation = Quaternion.Euler(0, 180, 0);
@@ -105,11 +129,61 @@ public class Enemy : MonoBehaviour
 
         if(gunner)
         {
+            Vector2 playerposition = player.GivePosition();
+            if (playerposition.x > transform.position.x)
+            {
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+            }
+            if (playerposition.x < transform.position.x)
+            {
+                transform.rotation = Quaternion.identity;
+                
+            }
+
             if(isPlayerInside)
             {
-
+                if(cooldownTimer > attackCooldown)
+                {
+                    Shoot();
+                }
             }
+            cooldownTimer += Time.deltaTime;
         }
+
+        if(car)
+        {
+            
+            if(cooldown > timeToMove)
+            {
+                if(rotate)
+                    transform.rotation = Quaternion.Euler(0,180,0);
+                    
+                else
+                    transform.rotation = Quaternion.identity;
+                cooldown = 0;
+                rotate = !rotate;
+            }
+            currentlyVelocity.x = -(maxSpeed * Mathf.Sign(transform.right.x));
+            thisRB.velocity = currentlyVelocity;
+            cooldown += Time.deltaTime;
+        }
+
+        
+    }
+
+    private void Shoot()
+    {
+        Instantiate(bullet, shootPlace.position, bullet.transform.rotation);
+        cooldownTimer = 0;
+    }
+
+    private IEnumerator BecomeTemporarilyInvincible()
+    {
+        isInvincible = true;
+
+        yield return new WaitForSeconds(0.01f);
+
+        isInvincible = false;
     }
 
     private bool MaybeJump()
@@ -138,10 +212,22 @@ public class Enemy : MonoBehaviour
 
     private void TouchPlayer()
     {
-        Collider2D collider = Physics2D.OverlapArea(sizeA.position, sizeB.position, playerLayer);
-        if ((collider != null))
+        Collider2D playerCollider = Physics2D.OverlapArea(sizeA.position, sizeB.position, playerLayer);
+        Collider2D shotCollider = Physics2D.OverlapArea(sizeA.position, sizeB.position, shotLayer);
+        if ((playerCollider != null) || (shotCollider != null))
         {
-            Destroy(gameObject);
+            player.gauge += 1;
+            hit = true;
+        }
+            
+    }
+    private void TouchUlti()
+    {
+        Collider2D shotCollider = Physics2D.OverlapArea(sizeA.position, sizeB.position, ultiLayer);
+        if ((shotCollider != null))
+        {
+            player.gauge += 1;
+            hit = true;
         }
             
     }

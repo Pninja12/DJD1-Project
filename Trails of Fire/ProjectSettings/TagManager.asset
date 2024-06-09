@@ -14,10 +14,10 @@ TagManager:
   - Ground
   - Enemy
   - Player
-  - 
-  - 
-  - 
-  - 
+  - BalasJogador
+  - BalasInimigos
+  - Ulti
+  - NextLevel
   - 
   - 
   - 

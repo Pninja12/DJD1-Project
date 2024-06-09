@@ -41,11 +41,25 @@ public class Player : MonoBehaviour
     [SerializeField]
     private LayerMask enemyLayer;
     [SerializeField]
+    private LayerMask bulletLayer;
+    [SerializeField]
     private float invincibilityDurationSeconds;
+    [SerializeField]
+    private int maxGauge = 10;
+    [SerializeField]
+    private float attackCooldown;
+    [SerializeField]
+    private GameObject fireBall;
+    [SerializeField]
+    private GameObject ulti;
+    [SerializeField]
+    private Transform shootPlace;
+    [SerializeField]
+    private LayerMask nextLevelLayer;
 
 
     public int health;
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     private SpriteRenderer sr;
     private Animator animator;
     private float defaultGravity;
@@ -53,7 +67,11 @@ public class Player : MonoBehaviour
     private bool canDash = true;
     private bool isDashing;
     private bool isInvincible = false;
-    private int score = 0;
+    public int score = 0;
+    public int gauge = 0;
+    private float cooldownTimer = Mathf.Infinity;
+    private ShootingPlacePlayer shootingPlacePlayer;
+    public int direction = 1;
     
 
     // Start is called before the first frame update
@@ -72,6 +90,7 @@ public class Player : MonoBehaviour
         }
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        
     }
 
     // Update is called once per frame
@@ -90,17 +109,14 @@ public class Player : MonoBehaviour
         airCollider.enabled = !isGrounded;
         groundCollider.enabled = isGrounded;
 
-        // Ver qual o input
+        //andar
         float deltaX = Input.GetAxis("Horizontal");
-
-        // Mover objecto nessa direc??o
-        //Vector3 moveVector = new Vector3(deltaX * maxSpeed * Time.deltaTime, 0, 0);
-        //transform.position = transform.position + moveVector;
 
         Vector3 velocity = rb.velocity;
 
         velocity.x = deltaX * maxSpeed;
 
+        //salto
         if ((Input.GetButtonDown("Jump")) && (isGrounded))
         {
             velocity.y = jumpSpeed;
@@ -121,8 +137,16 @@ public class Player : MonoBehaviour
         //Animation
         //animator.SetFloat("AbsVelocityX", Mathf.Abs(velocity.x));
 
-        if ((velocity.x <0) && (transform.right.x >0)) transform.rotation = Quaternion.Euler(0,180,0);
-        else if((velocity.x > 0) && (transform.right.x < 0)) transform.rotation = Quaternion.identity;
+        if ((velocity.x <0) && (transform.right.x >0))
+        {
+            transform.rotation = Quaternion.Euler(0,180,0);
+            direction = -1;
+        } 
+        else if((velocity.x > 0) && (transform.right.x < 0))
+        {
+            transform.rotation = Quaternion.identity;
+            direction = 1;
+        } 
 
         if (isDashing)
         {
@@ -134,19 +158,51 @@ public class Player : MonoBehaviour
             StartCoroutine(Dash());
         }
         TouchEnemy();
+        
+        if((Input.GetButtonDown("Normal Attack")) && (cooldownTimer > attackCooldown))
+        {
+            Attack();
+        }
+        if((Input.GetButtonDown("Super Attack")) && (gauge >= maxGauge))
+        {
+            SuperAttack();
+        }
+
+        cooldownTimer += Time.deltaTime;
     }
+    private void Attack()
+    {
+        Instantiate(fireBall, shootPlace.position, fireBall.transform.rotation);
+        cooldownTimer = 0;
+    }
+    private void SuperAttack()
+    {
+        Instantiate(ulti, shootPlace.position, ulti.transform.rotation);
+        gauge = 0;
+    }
+    
+
+    //Toca no inimigo
     private void TouchEnemy()
     {
+        //se estiver imortal
         if (isInvincible)
             return;
-        Collider2D collider = Physics2D.OverlapArea(sizeA.position, sizeB.position, enemyLayer);
-        if ((collider != null) && (health == 1))
+        Collider2D enemycollider = Physics2D.OverlapArea(sizeA.position, sizeB.position, enemyLayer);
+        Collider2D bulletcollider = Physics2D.OverlapArea(sizeA.position, sizeB.position, bulletLayer);
+        //se morrer
+        if (((enemycollider != null) || (bulletcollider != null)) && (health <= 1))
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        else if ((collider != null) && (health > 1))
+        //se ainda tiver uma vida
+        else if (((enemycollider != null) || (bulletcollider != null)) && (health > 1))
         {
             health -= 1;
             StartCoroutine(BecomeTemporarilyInvincible());
         }
+
+        Collider2D levelCollier = Physics2D.OverlapArea(sizeA.position, sizeB.position, nextLevelLayer);
+        if (levelCollier != null)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
             
     }
 
@@ -171,7 +227,7 @@ public class Player : MonoBehaviour
         isInvincible = false;
     }
 
-    public Vector2 GiveX()
+    public Vector2 GivePosition()
     {
         Vector2 vector = rb.position;
         return vector;
