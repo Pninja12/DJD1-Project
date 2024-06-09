@@ -44,14 +44,20 @@ public class Enemy : MonoBehaviour
     private float jumpSpeed = 200;
     [SerializeField, ShowIf(nameof(melee))]
     private float maxJumpTime = 0.1f;
+    [SerializeField, ShowIf(nameof(melee))]
+    private AudioClip meleeSound;
     [SerializeField, ShowIf(nameof(gunner))]
     private float attackCooldown = 4;
     [SerializeField, ShowIf(nameof(gunner))]
     private GameObject bullet;
     [SerializeField, ShowIf(nameof(gunner))]
     private Transform shootPlace;
+    [SerializeField, ShowIf(nameof(gunner))]
+    private AudioClip gunnerSound;
     [SerializeField, ShowIf(nameof(car))]
     private float timeToMove = 0;
+    [SerializeField, ShowIf(nameof(car))]
+    private AudioClip carSound;
 
     // Start is called before the first frame update
 
@@ -152,6 +158,7 @@ public class Enemy : MonoBehaviour
 
         if(car)
         {
+            SoundManager.instance.PlaySound(carSound);
             
             if(cooldown > timeToMove)
             {
@@ -174,6 +181,7 @@ public class Enemy : MonoBehaviour
     private void Shoot()
     {
         Instantiate(bullet, shootPlace.position, bullet.transform.rotation);
+        SoundManager.instance.PlaySound(gunnerSound);
         cooldownTimer = 0;
     }
 
@@ -216,6 +224,10 @@ public class Enemy : MonoBehaviour
         Collider2D shotCollider = Physics2D.OverlapArea(sizeA.position, sizeB.position, shotLayer);
         if ((playerCollider != null) || (shotCollider != null))
         {
+            if(playerCollider != null)
+            {
+                SoundManager.instance.PlaySound(meleeSound);
+            }
             player.gauge += 1;
             hit = true;
         }

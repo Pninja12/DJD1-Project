@@ -54,6 +54,14 @@ public class Player : MonoBehaviour
     private Transform shootPlace;
     [SerializeField]
     private LayerMask nextLevelLayer;
+    [SerializeField]
+    private AudioClip attackSound;
+    [SerializeField]
+    private AudioClip ultiSound;
+    [SerializeField]
+    private AudioClip gameStartSound;
+    [SerializeField]
+    private AudioClip deathSound;
 
     public int health;
     public Rigidbody2D rb;
@@ -84,6 +92,7 @@ public class Player : MonoBehaviour
             defaultGravity = rb.gravityScale;
         }
         sr = GetComponent<SpriteRenderer>();
+        SoundManager.instance.PlaySound(gameStartSound);
     }
 
     void Update()
@@ -172,12 +181,14 @@ public class Player : MonoBehaviour
     private void Attack()
     {
         Instantiate(fireBall, shootPlace.position, fireBall.transform.rotation);
+        SoundManager.instance.PlaySound(attackSound);
         cooldownTimer = 0;
     }
 
     private void SuperAttack()
     {
         Instantiate(ulti, shootPlace.position, ulti.transform.rotation);
+        SoundManager.instance.PlaySound(ultiSound);
         gauge = 0;
     }
 
@@ -191,6 +202,7 @@ public class Player : MonoBehaviour
 
         if ((enemyCollider != null || bulletCollider != null) && health <= 1)
         {
+            SoundManager.instance.PlaySound(deathSound);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         else if ((enemyCollider != null || bulletCollider != null) && health > 1)

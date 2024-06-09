@@ -193,10 +193,13 @@ MonoBehaviour:
     m_Bits: 0
   jumpSpeed: 200
   maxJumpTime: 0.1
+  meleeSound: {fileID: 0}
   attackCooldown: 4
   bullet: {fileID: 6152628011986319065, guid: b6f3943028c538a45932752408dc61a6, type: 3}
   shootPlace: {fileID: 8420651698425026346}
+  gunnerSound: {fileID: 8300000, guid: 2ca47f59c6e3fb5429a9bd1ece4c762c, type: 3}
   timeToMove: 0
+  carSound: {fileID: 0}
 --- !u!95 &1576526340083604534
 Animator:
   serializedVersion: 5
