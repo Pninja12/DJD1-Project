@@ -1,16 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] 
+    [SerializeField]
     private Faction faction;
     [SerializeField]
-    private float maxSpeed = 100;
+    private float maxSpeed = 10f;
     [SerializeField]
-    private float jumpSpeed = 200;
+    private float jumpSpeed = 5f;
     [SerializeField]
     private float maxJumpTime = 0.1f;
     [SerializeField]
@@ -18,7 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Transform groundCheck;
     [SerializeField]
-    private float groundCheckRadius = 2;
+    private float groundCheckRadius = 0.2f;
     [SerializeField]
     private LayerMask groundCheckLayers;
     [SerializeField]
@@ -26,14 +25,13 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Collider2D groundCollider;
     [SerializeField]
-    private float dashPower;
+    private float dashPower = 20f; // Increased dash power
     [SerializeField]
-    private float dashTime;
+    private float dashTime = 0.2f;
     [SerializeField]
-    private float dashCooldown;
+    private float dashCooldown = 1f;
     [SerializeField]
     private TrailRenderer tr;
-
     [SerializeField]
     private Transform sizeA;
     [SerializeField]
@@ -43,11 +41,11 @@ public class Player : MonoBehaviour
     [SerializeField]
     private LayerMask bulletLayer;
     [SerializeField]
-    private float invincibilityDurationSeconds;
+    private float invincibilityDurationSeconds = 2f;
     [SerializeField]
     private int maxGauge = 10;
     [SerializeField]
-    private float attackCooldown;
+    private float attackCooldown = 1f;
     [SerializeField]
     private GameObject fireBall;
     [SerializeField]
@@ -56,7 +54,6 @@ public class Player : MonoBehaviour
     private Transform shootPlace;
     [SerializeField]
     private LayerMask nextLevelLayer;
-
 
     public int health;
     public Rigidbody2D rb;
@@ -70,15 +67,13 @@ public class Player : MonoBehaviour
     public int score = 0;
     public int gauge = 0;
     private float cooldownTimer = Mathf.Infinity;
-    private ShootingPlacePlayer shootingPlacePlayer;
     public int direction = 1;
-    
-
-    // Start is called before the first frame update
+    private float horizontalInput;
 
     void Start()
     {
         health = maxHealth;
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         if (rb == null)
         {
@@ -89,148 +84,144 @@ public class Player : MonoBehaviour
             defaultGravity = rb.gravityScale;
         }
         sr = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
-        
     }
 
-    // Update is called once per frame
     void Update()
     {
         bool isGrounded = IsGrounded();
-        /* if(isGrounded)
-        {
-            sr.color = Color.green;
-        }
-        else
-        {
-            sr.color = Color.red;
-        } */
 
         airCollider.enabled = !isGrounded;
         groundCollider.enabled = isGrounded;
 
-        //andar
-        float deltaX = Input.GetAxis("Horizontal");
-
+        // Movement
+        horizontalInput = Input.GetAxis("Horizontal");
         Vector3 velocity = rb.velocity;
+        velocity.x = horizontalInput * maxSpeed;
 
-        velocity.x = deltaX * maxSpeed;
+        // Jumping
+        if (isGrounded)
+        {
+            animator.SetBool("IsJumping", false);  // Update IsJumping to false when grounded
+        }
 
-        //salto
-        if ((Input.GetButtonDown("Jump")) && (isGrounded))
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = jumpSpeed;
             jumpTime = Time.time;
             rb.gravityScale = 1;
+            animator.SetBool("IsJumping", true);
         }
-        else if((Input.GetButton("Jump")) && ((Time.time - jumpTime) < maxJumpTime))
+        else if (Input.GetButton("Jump") && (Time.time - jumpTime) < maxJumpTime)
         {
             rb.gravityScale = 1;
         }
-        else
+        else if (!isGrounded)
         {
             rb.gravityScale = defaultGravity;
         }
 
         rb.velocity = velocity;
 
-        //Animation
-        //animator.SetFloat("AbsVelocityX", Mathf.Abs(velocity.x));
+        // Animation
+        animator.SetFloat("AbsVelocityX", Mathf.Abs(velocity.x));
+        animator.SetBool("IsRunning", Mathf.Abs(horizontalInput) > 0 && isGrounded);  // Update IsRunning based on horizontalInput and isGrounded
 
-        if ((velocity.x <0) && (transform.right.x >0))
+        if (velocity.x < 0 && transform.right.x > 0)
         {
-            transform.rotation = Quaternion.Euler(0,180,0);
+            transform.rotation = Quaternion.Euler(0, 180, 0);
             direction = -1;
-        } 
-        else if((velocity.x > 0) && (transform.right.x < 0))
+        }
+        else if (velocity.x > 0 && transform.right.x < 0)
         {
             transform.rotation = Quaternion.identity;
             direction = 1;
-        } 
+        }
 
         if (isDashing)
         {
             return;
         }
 
-        if(Input.GetButtonDown("Dash") && canDash)
+        // Trigger dash when space bar is pressed
+        if (Input.GetKeyDown(KeyCode.Space) && canDash)
         {
             StartCoroutine(Dash());
         }
+
         TouchEnemy();
-        
-        if((Input.GetButtonDown("Normal Attack")) && (cooldownTimer > attackCooldown))
+
+        if (Input.GetButtonDown("Normal Attack") && cooldownTimer > attackCooldown)
         {
             Attack();
         }
-        if((Input.GetButtonDown("Super Attack")) && (gauge >= maxGauge))
+        if (Input.GetButtonDown("Super Attack") && gauge >= maxGauge)
         {
             SuperAttack();
         }
 
         cooldownTimer += Time.deltaTime;
     }
+
+    private void FixedUpdate()
+    {
+        rb.velocity = new Vector2(horizontalInput * maxSpeed, rb.velocity.y);
+        animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
+        animator.SetFloat("yVelocity", rb.velocity.y);
+    }
+
     private void Attack()
     {
         Instantiate(fireBall, shootPlace.position, fireBall.transform.rotation);
         cooldownTimer = 0;
     }
+
     private void SuperAttack()
     {
         Instantiate(ulti, shootPlace.position, ulti.transform.rotation);
         gauge = 0;
     }
-    
 
-    //Toca no inimigo
     private void TouchEnemy()
     {
-        //se estiver imortal
         if (isInvincible)
             return;
-        Collider2D enemycollider = Physics2D.OverlapArea(sizeA.position, sizeB.position, enemyLayer);
-        Collider2D bulletcollider = Physics2D.OverlapArea(sizeA.position, sizeB.position, bulletLayer);
-        //se morrer
-        if (((enemycollider != null) || (bulletcollider != null)) && (health <= 1))
+
+        Collider2D enemyCollider = Physics2D.OverlapArea(sizeA.position, sizeB.position, enemyLayer);
+        Collider2D bulletCollider = Physics2D.OverlapArea(sizeA.position, sizeB.position, bulletLayer);
+
+        if ((enemyCollider != null || bulletCollider != null) && health <= 1)
+        {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        //se ainda tiver uma vida
-        else if (((enemycollider != null) || (bulletcollider != null)) && (health > 1))
+        }
+        else if ((enemyCollider != null || bulletCollider != null) && health > 1)
         {
             health -= 1;
             StartCoroutine(BecomeTemporarilyInvincible());
         }
 
-        Collider2D levelCollier = Physics2D.OverlapArea(sizeA.position, sizeB.position, nextLevelLayer);
-        if (levelCollier != null)
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
-            
+        Collider2D levelCollider = Physics2D.OverlapArea(sizeA.position, sizeB.position, nextLevelLayer);
+        if (levelCollider != null)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
     }
 
     private bool IsGrounded()
     {
         Collider2D collider = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundCheckLayers);
-
-        if (collider == null)
-        {
-            return false;
-        }
-
-        return true;
+        return collider != null;
     }
-    
+
     private IEnumerator BecomeTemporarilyInvincible()
     {
         isInvincible = true;
-
         yield return new WaitForSeconds(invincibilityDurationSeconds);
-
         isInvincible = false;
     }
 
     public Vector2 GivePosition()
     {
-        Vector2 vector = rb.position;
-        return vector;
+        return rb.position;
     }
 
     private void OnDrawGizmosSelected()
@@ -248,22 +239,17 @@ public class Player : MonoBehaviour
         isDashing = true;
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
-        Vector3 velocity = rb.velocity;
-        rb.velocity = velocity;
-        if (velocity.x <0)
-        {
-            rb.velocity = new Vector2((- transform.localScale.x) * dashPower, 0f);
-        }
-        else if(velocity.x > 0)
-        {
-            rb.velocity = new Vector2(transform.localScale.x * dashPower, 0f);
-        }
-        
+
+        Vector2 dashVelocity = new Vector2(direction * dashPower, rb.velocity.y);
+        rb.velocity = dashVelocity;
+
         tr.emitting = true;
         yield return new WaitForSeconds(dashTime);
         tr.emitting = false;
+
         rb.gravityScale = originalGravity;
         isDashing = false;
+
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
     }

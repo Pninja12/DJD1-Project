@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 4776185222625184390}
   - component: {fileID: 5929951681805040445}
   - component: {fileID: -8492121600025984361}
+  - component: {fileID: 7477699219897290029}
   m_Layer: 10
   m_Name: EnemyAttack
   m_TagString: Untagged
@@ -109,7 +110,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 8f0a2a2cba122874797cf879ad02eef8, type: 3}
+  m_Sprite: {fileID: -950246651, guid: cf542f759f37c1a45afe740fe54fec85, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -211,9 +212,33 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 64
+  bulletLayer:
+    serializedVersion: 2
+    m_Bits: 0
   sizeA: {fileID: 2533895020380099219}
   sizeB: {fileID: 5938778414458482900}
   timeToDestroy: 3
+--- !u!95 &7477699219897290029
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6152628011986319065}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e7662493a930ac34ca57e279d7a4ffab, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7541388002496695431
 GameObject:
   m_ObjectHideFlags: 0

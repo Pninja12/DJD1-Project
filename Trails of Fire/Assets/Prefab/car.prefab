@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 7539897680480294044}
   - component: {fileID: 5381580427213876551}
   - component: {fileID: 5644055527474327291}
+  - component: {fileID: 7200094747865862615}
   m_Layer: 7
   m_Name: car
   m_TagString: Untagged
@@ -266,3 +267,24 @@ MonoBehaviour:
   bullet: {fileID: 0}
   shootPlace: {fileID: 0}
   timeToMove: 0
+--- !u!95 &7200094747865862615
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8703959294623172828}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: af82deb3504e6e94f973c73fe254f652, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
