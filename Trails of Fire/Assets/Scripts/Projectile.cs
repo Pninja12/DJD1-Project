@@ -52,7 +52,7 @@ public class Projectile : MonoBehaviour
     {
         if (hit)
         {
-            Destroy(gameObject, 0.01f);
+            Destroy(gameObject, 0.03f);
         } 
         //float movementSpeed = speed * Time.deltaTime * direction;
         if (direction <0) transform.rotation = Quaternion.Euler(0,180,0);

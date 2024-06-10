@@ -255,9 +255,7 @@ public class Player : MonoBehaviour
         Vector2 dashVelocity = new Vector2(direction * dashPower, rb.velocity.y);
         rb.velocity = dashVelocity;
 
-        tr.emitting = true;
         yield return new WaitForSeconds(dashTime);
-        tr.emitting = false;
 
         rb.gravityScale = originalGravity;
         isDashing = false;

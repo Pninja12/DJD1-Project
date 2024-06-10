@@ -158,15 +158,19 @@ public class Enemy : MonoBehaviour
 
         if(car)
         {
-            SoundManager.instance.PlaySound(carSound);
             
             if(cooldown > timeToMove)
             {
                 if(rotate)
+                {
                     transform.rotation = Quaternion.Euler(0,180,0);
-                    
+                    SoundManager.instance.PlaySound(carSound);
+                }    
                 else
+                {
                     transform.rotation = Quaternion.identity;
+                    SoundManager.instance.PlaySound(carSound);
+                }
                 cooldown = 0;
                 rotate = !rotate;
             }
